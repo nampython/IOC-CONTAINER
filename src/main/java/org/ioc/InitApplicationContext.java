@@ -33,7 +33,7 @@ public class InitApplicationContext {
     }
 
     public static ApplicationContext run(File[] files, Configuration configuration) {
-        LoaderComponent scanningComponent = new LoaderComponent(configuration.scanning());
+        SettingComponent scanningComponent = new LoaderComponent(configuration.scanning());
         InstantiationComponent instantiationComponent = new  InstantiationComponentImpl(
                 new DependencyResolveComponentImpl(configuration.instantiations())
         );
@@ -43,7 +43,7 @@ public class InitApplicationContext {
 
         final Runnable runnable = () -> {
             locatedClasses.addAll(getActiveClass(files));
-            final Set<ComponentModel> allActiveComponents = new HashSet<>(scanningComponent.mappingComponents(locatedClasses));
+            final Set<ComponentModel> allActiveComponents = new HashSet<>(scanningComponent.mappingComponent(locatedClasses));
             instantiatedComponents.addAll(new ArrayList<>(
                     instantiationComponent.instantiateComponentAndBean(allActiveComponents)
             ));

@@ -15,7 +15,7 @@ import java.util.*;
  * * Iterates all located classes and looks for classes with @{@link Component}
  * * annotation or one provided by the client and then collects data for that class.
  */
-public class LoaderComponent {
+public class LoaderComponent extends SettingComponent{
     private final ScanningConfiguration scanningConfiguration;
 
     public LoaderComponent(ScanningConfiguration scanningConfiguration) {
@@ -23,7 +23,8 @@ public class LoaderComponent {
         this.init();
     }
 
-    public Set<ComponentModel> mappingComponents(Set<Class<?>> locatedClass) {
+    @Override
+    public Set<ComponentModel> mappingComponent(Set<Class<?>> locatedClass) {
         final Map<Class<?>, Annotation> onlyForComponentClass = this.filterComponentClasses(locatedClass);
         final Set<ComponentModel> componentStorage = new HashSet<>();
         final Map<Class<? extends Annotation>, ComponentModel> aspectHandlerServices = new HashMap<>();
@@ -277,6 +278,7 @@ public class LoaderComponent {
         return beans;
     }
 
+    @Override
     public void init() {
         this.scanningConfiguration.getComponentAnnotations().add(Component.class);
         this.scanningConfiguration.getBeanAnnotations().add(Bean.class);
