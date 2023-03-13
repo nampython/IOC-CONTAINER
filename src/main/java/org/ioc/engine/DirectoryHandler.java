@@ -1,4 +1,4 @@
-package org.ioc;
+package org.ioc.engine;
 
 import org.ioc.type.DirectoryType;
 
@@ -7,21 +7,19 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.net.URLDecoder;
 
-public class DirectoryHandlerImpl implements DirectoryHandler {
+public class DirectoryHandler {
     private static final String JAR_FILE_EXTENSION = ".jar";
 
     /**
      *
      * @param initClass
      */
-    @Override
     public Directory resolveDirectory(Class<?> initClass) {
         String pathDir = this.getDir(initClass);
         DirectoryType dirType = this.getDirType(pathDir);
         return new Directory(pathDir, dirType);
     }
 
-    @Override
     public Directory resolveDirectory(File directory) {
         try {
             return new Directory(

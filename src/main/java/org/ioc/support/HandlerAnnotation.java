@@ -16,15 +16,12 @@ public class HandlerAnnotation {
     }
 
     public static boolean isAliasAnnotationPresent(Annotation[] annotations, Class<? extends Annotation> requiredAnnotation) {
-
         for (Annotation declaredAnnotation : annotations) {
             final Class<?> alias = getAliasAnnotation(declaredAnnotation, requiredAnnotation);
-
             if (alias != null) {
                 return true;
             }
         }
-
         return false;
     }
 
@@ -34,7 +31,6 @@ public class HandlerAnnotation {
                 return annotation;
             }
         }
-
         return null;
     }
 

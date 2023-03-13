@@ -3,6 +3,8 @@ package org.ioc;
 import org.ioc.configuration.Configuration;
 import org.ioc.contex.AnnotationConfigApplicationContext;
 import org.ioc.contex.ApplicationContext;
+import org.ioc.engine.*;
+import org.ioc.engine.ClassLoaderContext;
 import org.ioc.stereotype.StartUp;
 import org.ioc.type.DirectoryType;
 
@@ -12,27 +14,27 @@ import java.lang.reflect.Method;
 import java.util.*;
 
 public class InitApplicationContext {
-    public static void main(String[] args) {
-        run(InitApplicationContext.class);
-    }
-
-    private static ApplicationContext run(Class<?> initApplicationContextClass) {
+    public static ApplicationContext run(Class<?> initApplicationContextClass) {
         return run(initApplicationContextClass, new Configuration());
     }
 
-    private static ApplicationContext run(Class<?> initApplicationContextClass, Configuration configuration) {
-        final Directory directory = new DirectoryHandlerImpl().resolveDirectory(initApplicationContextClass);
+    /**
+     *  In case that want to custom component annotation. Use class {@link Configuration} to custom annotation
+     * @param initApplicationContextClass {@link Class}
+     * @param configuration {@link Configuration}
+     * @return ApplicationContext
+     */
+    public static ApplicationContext run(Class<?> initApplicationContextClass, Configuration configuration) {
+        final Directory directory = new DirectoryHandler().resolveDirectory(initApplicationContextClass);
         final File file = new File(directory.getDirectory());
-        final ApplicationContext applicationContext = run(
-                new File[] {file}, configuration
-        );
+        final ApplicationContext applicationContext = run(new File[] {file}, configuration);
         runStartUpMethod(initApplicationContextClass, applicationContext);
         return applicationContext;
     }
 
-    private static ApplicationContext run(File[] files, Configuration configuration) {
-        ScanningComponent scanningComponent = new ScanningComponentImpl(configuration.scanning());
-        InstantiationComponent instantiationComponent = new InstantiationComponentImpl(
+    public static ApplicationContext run(File[] files, Configuration configuration) {
+        LoaderComponent scanningComponent = new LoaderComponent(configuration.scanning());
+        InstantiationComponent instantiationComponent = new  InstantiationComponentImpl(
                 new DependencyResolveComponentImpl(configuration.instantiations())
         );
 
@@ -69,16 +71,15 @@ public class InitApplicationContext {
 
     private static Set<Class<?>> getActiveClass(File[] files) {
         final Set<Class<?>> allActiveClass = new HashSet<>();
-        DirectoryHandler directoryHandler = new DirectoryHandlerImpl();
-        AccessingAllClasses accessingAllClasses = new AccessingAllClassesFromDirImpl();
-
+        DirectoryHandler directoryHandler = new DirectoryHandler();
+        ClassLoaderContext classLoaderContext = new ClassLoaderContextDir();
         for (File file : files) {
             final Directory directory = directoryHandler.resolveDirectory(file);
             //TODO: Implement ClassLocatorForJarFile class.
             if (directory.getDirectoryType() == DirectoryType.JAR_FILE) {
 //                classLocator = new ClassLocatorForJarFile();
             }
-            allActiveClass.addAll(accessingAllClasses.accessAllClasses(directory.getDirectory()));
+            allActiveClass.addAll(classLoaderContext.loadClasses(directory.getDirectory()));
         }
         return allActiveClass;
     }
@@ -87,7 +88,7 @@ public class InitApplicationContext {
      * This method calls executes when all services are loaded.
      * <p>
      * Looks for instantiated service from the given type.
-     * <p>
+     * <p>public
      * If instance is found, looks for void method with 0 params
      * and with with @StartUp annotation and executes it.
      *

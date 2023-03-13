@@ -1,4 +1,4 @@
-package org.ioc;
+package org.ioc.engine;
 
 import org.ioc.exception.ClassLocationException;
 
@@ -7,18 +7,14 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
-public class AccessingAllClassesFromDirImpl implements AccessingAllClasses {
-    private static final String INVALID_DIRECTORY_MSG = "Invalid directory '%s'.";
-    public static final String JAVA_BINARY_EXTENSION = ".class";
-
+public class ClassLoaderContextDir extends ClassLoaderContext {
     private final Set<Class<?>> locatedClasses;
-
-    public AccessingAllClassesFromDirImpl() {
+    public ClassLoaderContextDir() {
         this.locatedClasses = new HashSet<>();
     }
 
     @Override
-    public Set<Class<?>> accessAllClasses(String dir) {
+    public Set<Class<?>> loadClasses(String dir) {
         this.init();
         File file = new File(dir);
         File[] listFiles = Objects.requireNonNull(file.listFiles());
