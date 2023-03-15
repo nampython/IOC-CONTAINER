@@ -1,5 +1,7 @@
 package org.ioc.configuration;
 
+import org.ioc.ComponentDetailsCreated;
+
 import java.lang.annotation.Annotation;
 import java.util.Collection;
 import java.util.HashSet;
@@ -8,6 +10,8 @@ import java.util.Set;
 public class ScanningConfiguration extends CoreConfiguration{
     private final Set<Class<? extends Annotation>> componentAnnotations;
     private final Set<Class<? extends Annotation>> beanAnnotations;
+    private final Set<ComponentDetailsCreated> componentDetailsCreateds;
+
     private ClassLoader classLoader;
 
     public ScanningConfiguration(Configuration configuration) {
@@ -15,7 +19,7 @@ public class ScanningConfiguration extends CoreConfiguration{
         this.componentAnnotations = new HashSet<>();
         this.beanAnnotations = new HashSet<>();
         this.classLoader = Thread.currentThread().getContextClassLoader();
-
+        this.componentDetailsCreateds = new HashSet<>();
     }
 
     public ScanningConfiguration addComponentAnnotation(Class<? extends Annotation> annotation) {
@@ -48,5 +52,14 @@ public class ScanningConfiguration extends CoreConfiguration{
 
     public ClassLoader getClassLoader() {
         return classLoader;
+    }
+
+    public Set<ComponentDetailsCreated> getServiceDetailsCreatedCallbacks() {
+        return this.componentDetailsCreateds;
+    }
+
+    public ScanningConfiguration addComponentDetailsCreatedCallback(ComponentDetailsCreated componentDetailsCreated) {
+        this.componentDetailsCreateds.add(componentDetailsCreated);
+        return this;
     }
 }

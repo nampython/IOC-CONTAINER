@@ -67,7 +67,7 @@ public class DependencyResolveComponentImpl implements DependencyResolveComponen
         resolvedDependencies.add(enqueuedComponentDetails);
     }
 
-    private  List<ComponentModel> resolveParameter(DependencyParam dependencyParam, List<ComponentModel> allAvailableComponents) {
+    private List<ComponentModel> resolveParameter(DependencyParam dependencyParam, List<ComponentModel> allAvailableComponents) {
         Class<?> dependencyType = dependencyParam.getDependencyType();
         String instanceName = dependencyParam.getInstanceName();
 
@@ -132,7 +132,7 @@ public class DependencyResolveComponentImpl implements DependencyResolveComponen
     }
 
     private List<ComponentModel> loadCompatibleComponentDetails(DependencyParam dependencyParam, List<ComponentModel> allAvailableComponents) {
-        final List<ResolvedComponentDto>  compatibleComponents = HandlerDependencyParam.findAllCompatibleComponents(dependencyParam, allAvailableComponents);
+        final List<ResolvedComponentDto> compatibleComponents = HandlerDependencyParam.findAllCompatibleComponents(dependencyParam, allAvailableComponents);
         if (compatibleComponents.size() > 1) {
             throw new ComponentInstantiationException(String.format(
                     "Could not create instance of '%s'. "
@@ -154,31 +154,23 @@ public class DependencyResolveComponentImpl implements DependencyResolveComponen
     }
 
     private void checkForCyclicDependency(ComponentModel componentModel, LinkedList<ComponentModel> componentTrace) {
-        if (componentTrace.isEmpty()) {
-            return;
-        }
-
-        if (!componentTrace.contains(componentModel)) {
-            return;
-        }
-
-        char arrowDown = '\u2193';
-        char arrowUp = '\u2191';
-
-        final StringBuilder sb = new StringBuilder();
-        sb.append("Circular dependency found!");
-        sb.append(String.format("\n%s<----%s", arrowDown, arrowUp));
-        sb.append(String.format("\n%s     %s %s", arrowDown, arrowUp, componentModel.getComponentType()));
-
-        for (ComponentModel trace : componentTrace) {
-            if (componentModel.equals(trace)) {
-                break;
+        if (!componentTrace.isEmpty()) {
+            if (componentTrace.contains(componentModel)) {
+                char arrowDown = '\u2193';
+                char arrowUp = '\u2191';
+                final StringBuilder sb = new StringBuilder();
+                sb.append("Circular dependency found!");
+                sb.append(String.format("\n%s<----%s", arrowDown, arrowUp));
+                sb.append(String.format("\n%s     %s %s", arrowDown, arrowUp, componentModel.getComponentType()));
+                for (ComponentModel trace : componentTrace) {
+                    if (componentModel.equals(trace)) {
+                        break;
+                    }
+                    sb.append(String.format("\n%s     %s %s", arrowDown, arrowUp, trace.getComponentType()));
+                }
+                sb.append(String.format("\n%s---->%s", arrowDown, arrowUp));
+                throw new CircularDependencyException(sb.toString());
             }
-
-            sb.append(String.format("\n%s     %s %s", arrowDown, arrowUp, trace.getComponentType()));
         }
-        sb.append(String.format("\n%s---->%s", arrowDown, arrowUp));
-
-        throw new CircularDependencyException(sb.toString());
     }
 }

@@ -1,15 +1,18 @@
-package org.ioc;
+package org.ioc.engine;
 
+import org.ioc.*;
 import org.ioc.exception.ComponentInstantiationException;
 import org.ioc.support.HandlerInstantiation;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Set;
 
-public class InstantiationComponentImpl implements InstantiationComponent {
-
+public class InstantiationComponentBean extends InstantiateContext {
     private final DependencyResolveComponent dependencyResolveComponent;
 
-    public InstantiationComponentImpl(DependencyResolveComponent dependencyResolveComponent) {
+    public InstantiationComponentBean(DependencyResolveComponent dependencyResolveComponent) {
         this.dependencyResolveComponent = dependencyResolveComponent;
     }
 
@@ -37,8 +40,6 @@ public class InstantiationComponentImpl implements InstantiationComponent {
         if (enqueuedComponentDetail.getComponentModel().getInstance() == null) {
             HandlerInstantiation.createInstance(componentModel, constructorInstances, fieldInstances);
         }
-
-
         if (componentModel.getScopeType() == ScopeType.PROTOTYPE) {
             //???
         }

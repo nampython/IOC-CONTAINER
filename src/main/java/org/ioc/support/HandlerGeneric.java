@@ -13,16 +13,12 @@ public class HandlerGeneric {
                 .filter(type -> ((ParameterizedType) type).getRawType() == genericClass)
                 .map(type -> (ParameterizedType) type)
                 .findFirst();
-
         if (genericClsType.isPresent()) {
             return genericClsType.get().getActualTypeArguments();
         }
-
-        if (cls.getGenericSuperclass() != Object.class) {
-            return getGenericTypeArguments((Class<?>) cls.getGenericSuperclass(), genericClass);
+         else {
+            return cls.getGenericSuperclass() != Object.class ?  getGenericTypeArguments((Class<?>) cls.getGenericSuperclass(), genericClass) : null;
         }
-
-        return null;
     }
 
     public static Class<?> getRawType(ParameterizedType type) {
