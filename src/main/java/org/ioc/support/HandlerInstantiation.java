@@ -109,6 +109,11 @@ public class HandlerInstantiation {
         }
     }
 
+    /**
+     * If the component has a pre-destroy method, invoke it. After invoking pre-destroy method, set instance of the component is null
+     *
+     * @param component The component model that contains the instance to be destroyed.
+     */
     public static void destroyInstance(ComponentModel component) throws PreDestroyExecutionException {
         if (component.getPreDestroyMethod() != null) {
             try {

@@ -1,7 +1,7 @@
 package org.ioc.contex.factory;
 
 public interface UpdatableBeanFactory {
-    void update(Object componentInstance);
-    void update(Class<?> cls, Object componentInstance);
-    void update(Class<?> cls, Object componentInstance, boolean destroyOldInstance);
+    void updateBeanInstance(Object componentInstance);
+    void updateBeanInstance(Class<?> cls, Object componentInstance);
+    void updateBeanInstance(Class<?> cls, Object componentInstance, boolean destroyOldInstance);
 }

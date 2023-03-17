@@ -54,7 +54,7 @@ public class InstantiationComponentBean extends InstantiateContext {
         for (ComponentBeanModel bean : componentModel.getBeans()) {
             HandlerInstantiation.createBeanInstance(bean);
             if (bean.getScopeType() == ScopeType.PROXY) {
-//                ProxyUtils.createBeanProxyInstance(beanDetails);
+                ProxyUtils.createBeanProxyInstance(bean);
             }
         }
     }

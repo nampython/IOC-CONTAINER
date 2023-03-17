@@ -1,8 +1,8 @@
 package org.ioc;
 
 import org.ioc.configuration.Configuration;
-import org.ioc.contex.AnnotationConfigApplicationContext;
 import org.ioc.contex.ApplicationContext;
+import org.ioc.contex.ApplicationContextCached;
 import org.ioc.engine.*;
 import org.ioc.engine.ClassLoaderContext;
 import org.ioc.stereotype.StartUp;
@@ -66,7 +66,7 @@ public class InitApplicationContext {
                 Thread.currentThread().setContextClassLoader(oldCl);
             }
         }
-        return new AnnotationConfigApplicationContext(locatedClasses, instantiatedComponents);
+        return new ApplicationContextCached(locatedClasses, instantiatedComponents);
     }
 
     private static Set<Class<?>> getActiveClass(File[] files) {
