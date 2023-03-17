@@ -80,27 +80,19 @@ public class DependencyParam {
         this.instance = instance;
     }
 
+    /**
+     * > If the component model's component type is assignable to the dependency type, or if the component model's instance
+     * is not null and the instance's class is assignable to the dependency type, and if the instance name is null or
+     * matches the dependency's instance name, then return true
+     *
+     * @param componentModel - The component model that is being checked for compatibility.
+     */
     public boolean isCompatible(ComponentModel componentModel) {
         final boolean isRequiredTypeAssignable = this.dependencyType.isAssignableFrom(componentModel.getComponentType());
         final boolean isRequiredTypeAssignable2 = componentModel.getInstance() != null &&
                 this.dependencyType.isAssignableFrom(componentModel.getInstance().getClass());
         final boolean instanceNameMatches = this.instanceName  == null || this.instanceName.equalsIgnoreCase(componentModel.getInstanceName());
-
         return (isRequiredTypeAssignable || isRequiredTypeAssignable2) && instanceNameMatches;
-    }
-
-    @Override
-    public String toString() {
-        final StringBuffer sb = new StringBuffer("DependencyParam{");
-        sb.append("dependencyType=").append(dependencyType);
-        sb.append(", instanceName='").append(instanceName).append('\'');
-        sb.append(", annotations=").append(annotations == null ? "null" : Arrays.asList(annotations).toString());
-        sb.append(", isRequired=").append(isRequired);
-        sb.append(", dependencyResolver=").append(dependencyResolver);
-        sb.append(", componentModel=").append(componentModel);
-        sb.append(", instance=").append(instance);
-        sb.append('}');
-        return sb.toString();
     }
 }
 

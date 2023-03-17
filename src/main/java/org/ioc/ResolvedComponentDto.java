@@ -18,13 +18,4 @@ public class ResolvedComponentDto {
     public ComponentModel getActualComponentModel() {
         return actualComponentModel;
     }
-
-    @Override
-    public String toString() {
-        final StringBuffer sb = new StringBuffer("ResolvedComponentDto{");
-        sb.append("producerComponentModel=").append(producerComponentModel);
-        sb.append(", actualComponentModel=").append(actualComponentModel);
-        sb.append('}');
-        return sb.toString();
-    }
 }

@@ -63,6 +63,7 @@ public class ComponentModel {
 
     public ComponentModel() {
     }
+
     public ComponentModel(Class<?> componentType,
                           Annotation annotation,
                           Constructor<?> targetConstructor,
@@ -100,6 +101,7 @@ public class ComponentModel {
     public Object getActualInstance() {
         return this.instance;
     }
+
     public Object getInstance() {
         if (this.getScopeType() == ScopeType.PROTOTYPE) {
             if (this.instance == null) {
@@ -115,6 +117,14 @@ public class ComponentModel {
             return this.proxyInstance;
         }
         return instance;
+    }
+
+    public void setProxyInstance(Object proxyInstance) {
+        if (this.proxyInstance != null) {
+            throw new IllegalArgumentException(PROXY_ALREADY_CREATED_MSG);
+        }
+
+        this.proxyInstance = proxyInstance;
     }
 
     public Method getPostConstructMethod() {
@@ -192,6 +202,7 @@ public class ComponentModel {
     public void setMethodAspectHandlers(Map<Method, List<MethodAspectHandlerDto>> methodAspectHandlers) {
         this.methodAspectHandlers.putAll(methodAspectHandlers);
     }
+
     public Map<Method, List<MethodAspectHandlerDto>> getMethodAspectHandlers() {
         return this.methodAspectHandlers;
     }

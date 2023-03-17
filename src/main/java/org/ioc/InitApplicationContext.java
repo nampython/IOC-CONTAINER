@@ -35,7 +35,7 @@ public class InitApplicationContext {
     public static ApplicationContext run(File[] files, Configuration configuration) {
         SettingComponent scanningComponent = new LoaderComponent(configuration.scanning());
         InstantiateContext instantiationComponent = new InstantiationComponentBean(
-                new DependencyResolveComponentImpl(configuration.instantiations())
+                new DependencyResolveComponent(configuration.instantiations())
         );
 
         final Set<Class<?>> locatedClasses = new HashSet<>();

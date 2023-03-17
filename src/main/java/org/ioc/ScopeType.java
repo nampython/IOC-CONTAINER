@@ -7,7 +7,7 @@ public enum ScopeType {
     SINGLETON,
 
     /**
-     * New instance for each request to obtain the service.
+     * New instance for each request to obtain the Component.
      */
     PROTOTYPE,
 
