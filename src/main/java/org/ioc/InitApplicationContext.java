@@ -13,7 +13,17 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
 
+/**
+ * Entry point for every application. Return an applicationContext to retrieve the{@link org.ioc.stereotype.Component}
+ */
 public class InitApplicationContext {
+    /**
+     * > This function creates a new instance of the class passed in as the first parameter, and then calls the `run`
+     * function with the new instance and the second parameter
+     *
+     * @param initApplicationContextClass The class that will be used to initialize the application context.
+     * @return An ApplicationContext object.
+     */
     public static ApplicationContext run(Class<?> initApplicationContextClass) {
         return run(initApplicationContextClass, new Configuration());
     }
@@ -37,7 +47,6 @@ public class InitApplicationContext {
         InstantiateContext instantiationComponent = new InstantiationComponentBean(
                 new DependencyResolveComponent(configuration.instantiations())
         );
-
         final Set<Class<?>> locatedClasses = new HashSet<>();
         final List<ComponentModel> instantiatedComponents = new ArrayList<>();
 

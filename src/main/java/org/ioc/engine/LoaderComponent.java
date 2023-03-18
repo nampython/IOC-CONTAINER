@@ -81,26 +81,25 @@ public class LoaderComponent extends SettingComponent {
         final Set<Class<? extends Annotation>> componentsAnnotations = this.scanningConfiguration.getComponentAnnotations();
         final Map<Class<?>, Annotation> classWithComponent = new HashMap<>();
         for (Class<?> cls : scannedClasses) {
-            if (cls.isInterface() || cls.isEnum() || cls.isAnnotation()) {
-                continue;
-            }
-            for (Annotation annotation : cls.getAnnotations()) {
-                if (componentsAnnotations.contains(annotation.annotationType())) {
-                    classWithComponent.put(cls, annotation);
-                    break;
+            if (!cls.isInterface() && !cls.isEnum() && !cls.isAnnotation()) {
+                for (Annotation annotation : cls.getAnnotations()) {
+                    if (componentsAnnotations.contains(annotation.annotationType())) {
+                        classWithComponent.put(cls, annotation);
+                        break;
+                    }
                 }
             }
         }
-//        Map<Class<?>, Class<? extends Annotation>> additionalClasses = this.scanningConfiguration.getAdditionalClasses();
-//        additionalClasses.forEach(
-//                (cls, a) -> {
-//                    Annotation annotation = null;
-//                    if (a != null && cls.isAnnotationPresent(a)) {
-//                        annotation = cls.getAnnotation(a);
-//                    }
-//
-//                    locatedClasses.put(cls, annotation);
-//                });
+        Map<Class<?>, Class<? extends Annotation>> additionalClasses = this.scanningConfiguration.getAdditionalClasses();
+        additionalClasses.forEach(
+                (cls, a) -> {
+                    Annotation annotation = null;
+                    if (a != null && cls.isAnnotationPresent(a)) {
+                        annotation = cls.getAnnotation(a);
+                    }
+
+                    classWithComponent.put(cls, annotation);
+                });
         return classWithComponent;
     }
 
@@ -218,8 +217,8 @@ public class LoaderComponent extends SettingComponent {
      * component to the set of aspect handler components that will be applied to the component model
      *
      * @param aspectHandlerComponents - a map of all the aspect handler components, where the key is the annotation type and
-     * the value is the component model.
-     * @param componentStorage -  a set of all components that have been found in the application.
+     *                                the value is the component model.
+     * @param componentStorage        -  a set of all components that have been found in the application.
      */
     private void applyAspectHandlerComponents(Map<Class<? extends Annotation>, ComponentModel> aspectHandlerComponents, Set<ComponentModel> componentStorage) {
         if (!aspectHandlerComponents.isEmpty()) {
@@ -262,7 +261,7 @@ public class LoaderComponent extends SettingComponent {
     /**
      * If the component is a subclass of `ComponentMethodAspectHandler`, then add it to the `aspectHandlerServices` map
      *
-     * @param componentModel - The component model of the class being loaded.
+     * @param componentModel        - The component model of the class being loaded.
      * @param aspectHandlerServices - a map of aspect handler services, keyed by the annotation type
      */
     @SuppressWarnings("unchecked")

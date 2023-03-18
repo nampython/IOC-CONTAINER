@@ -3,19 +3,18 @@ package org.ioc.configuration;
 import org.ioc.ComponentDetailsCreated;
 
 import java.lang.annotation.Annotation;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 public class ScanningConfiguration extends CoreConfiguration{
     private final Set<Class<? extends Annotation>> componentAnnotations;
     private final Set<Class<? extends Annotation>> beanAnnotations;
     private final Set<ComponentDetailsCreated> componentDetailsCreateds;
-
+    private final Map<Class<?>, Class<? extends Annotation>> additionalClasses;
     private ClassLoader classLoader;
 
     public ScanningConfiguration(Configuration configuration) {
         super(configuration);
+        this.additionalClasses = new HashMap<>();
         this.componentAnnotations = new HashSet<>();
         this.beanAnnotations = new HashSet<>();
         this.classLoader = Thread.currentThread().getContextClassLoader();
@@ -56,6 +55,14 @@ public class ScanningConfiguration extends CoreConfiguration{
 
     public Set<ComponentDetailsCreated> getServiceDetailsCreatedCallbacks() {
         return this.componentDetailsCreateds;
+    }
+
+    public Map<Class<?>, Class<? extends Annotation>> getAdditionalClasses() {
+        return this.additionalClasses;
+    }
+    public ScanningConfiguration addAdditionalClassesForScanning(Map<Class<?>, Class<? extends Annotation>> additionalClasses) {
+        this.additionalClasses.putAll(additionalClasses);
+        return this;
     }
 
     public ScanningConfiguration addComponentDetailsCreatedCallback(ComponentDetailsCreated componentDetailsCreated) {
