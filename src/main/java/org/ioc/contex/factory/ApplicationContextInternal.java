@@ -4,10 +4,10 @@ import org.ioc.ComponentBeanModel;
 import org.ioc.ComponentModel;
 import org.ioc.contex.ApplicationContext;
 import org.ioc.contex.enviroment.EnvironmentSource;
+import org.ioc.engine.InstantiationComponentBean;
 import org.ioc.exception.AlreadyInitializedException;
 import org.ioc.exception.BeansException;
 import org.ioc.exception.NoSuchBeanDefinitionException;
-import org.ioc.support.HandlerInstantiation;
 
 import java.lang.annotation.Annotation;
 import java.util.*;
@@ -258,9 +258,9 @@ public class ApplicationContextInternal implements EnvironmentSource, Applicatio
             final Object oldInstance = componentModel.getActualInstance();
             componentModel.setInstance(oldInstance);
             if (componentModel instanceof ComponentBeanModel) {
-                HandlerInstantiation.createBeanInstance((ComponentBeanModel) componentModel);
+                InstantiationComponentBean.HandlerInstantiation.createBeanInstance((ComponentBeanModel) componentModel);
             } else {
-                HandlerInstantiation.createInstance(componentModel);
+                InstantiationComponentBean.HandlerInstantiation.createInstance(componentModel);
             }
             final Object newInstance = componentModel.getActualInstance();
             return (T) newInstance;
@@ -346,7 +346,7 @@ public class ApplicationContextInternal implements EnvironmentSource, Applicatio
             throw new IllegalArgumentException(String.format(COMPONENT_NOT_FOUND_FORMAT, cls.getName()));
         } else {
             if (destroyOldInstance) {
-                HandlerInstantiation.destroyInstance(componentModel);
+                InstantiationComponentBean.HandlerInstantiation.destroyInstance(componentModel);
             }
             componentModel.setInstance(componentInstance);
         }
@@ -354,7 +354,7 @@ public class ApplicationContextInternal implements EnvironmentSource, Applicatio
 
     @Override
     public void reload(ComponentModel componentModel) {
-        HandlerInstantiation.destroyInstance(componentModel);
+        InstantiationComponentBean.HandlerInstantiation.destroyInstance(componentModel);
         final Object newInstance = this.getNewBean(componentModel.getComponentType(), componentModel.getInstanceName());
         componentModel.setInstance(newInstance);
     }

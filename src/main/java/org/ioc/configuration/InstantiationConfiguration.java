@@ -11,7 +11,6 @@ import java.util.Set;
 
 public class InstantiationConfiguration extends CoreConfiguration {
     private final Collection<ComponentModel> providedComponentModels;
-
     private final Set<DependencyResolver> dependencyResolvers;
 
     public InstantiationConfiguration(Configuration parentConfig) {

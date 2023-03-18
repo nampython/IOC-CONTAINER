@@ -1,10 +1,12 @@
 package org.ioc;
 
-import org.ioc.util.ObjectInstantiationUtils;
+import org.ioc.exception.ComponentInstantiationException;
+import org.ioc.exception.PostConstructException;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
 
@@ -64,13 +66,7 @@ public class ComponentModel {
     public ComponentModel() {
     }
 
-    public ComponentModel(Class<?> componentType,
-                          Annotation annotation,
-                          Constructor<?> targetConstructor,
-                          String instanceName,
-                          Method postConstructMethod, Method preDestroyMethod,
-                          ScopeType scopeType,
-                          Field[] autowireAnnotatedFields) {
+    public ComponentModel(Class<?> componentType, Annotation annotation, Constructor<?> targetConstructor, String instanceName, Method postConstructMethod, Method preDestroyMethod, ScopeType scopeType, Field[] autowireAnnotatedFields) {
         this();
         this.setComponentType(componentType);
         this.setAnnotation(annotation);
@@ -106,25 +102,25 @@ public class ComponentModel {
         if (this.getScopeType() == ScopeType.PROTOTYPE) {
             if (this.instance == null) {
                 return null;
-            }
-            if (!this.instanceRequested) {
+            } else if (!this.instanceRequested) {
                 this.instanceRequested = true;
                 return this.instance;
             }
-            return ObjectInstantiationUtils.createNewInstance(this);
+            return ObjectInstantiation.createNewInstance(this);
+        } else {
+            if (this.proxyInstance != null) {
+                return this.proxyInstance;
+            }
+            return instance;
         }
-        if (this.proxyInstance != null) {
-            return this.proxyInstance;
-        }
-        return instance;
     }
 
     public void setProxyInstance(Object proxyInstance) {
         if (this.proxyInstance != null) {
             throw new IllegalArgumentException(PROXY_ALREADY_CREATED_MSG);
+        } else {
+            this.proxyInstance = proxyInstance;
         }
-
-        this.proxyInstance = proxyInstance;
     }
 
     public Method getPostConstructMethod() {
@@ -212,19 +208,47 @@ public class ComponentModel {
         return targetConstructor;
     }
 
-    @Override
-    public String toString() {
-        final StringBuffer sb = new StringBuffer("ComponentModel{");
-        sb.append("componentType=").append(componentType);
-        sb.append(", annotation=").append(annotation);
-        sb.append(", targetConstructor=").append(targetConstructor);
-        sb.append(", instanceName='").append(instanceName).append('\'');
-        sb.append(", instance=").append(instance);
-        sb.append(", postConstructMethod=").append(postConstructMethod);
-        sb.append(", preDestroyMethod=").append(preDestroyMethod);
-        sb.append(", scopeType=").append(scopeType);
-        sb.append(", beans=").append(this.getBeans());
-        sb.append('}');
-        return sb.toString();
+    public static class ObjectInstantiation {
+        private static final String INVALID_PARAMETERS_COUNT_MSG = "Invalid parameters count for '%s'.";
+
+        public static Object createNewInstance(ComponentModel componentModel) {
+            final Object[] constructorParams = componentModel.getResolvedConstructorParams().stream().map(DependencyParam::getInstance).toArray(Object[]::new);
+            final Object[] fieldParams = componentModel.getResolvedFields().stream().map(DependencyParam::getInstance).toArray(Object[]::new);
+            return createNewInstance(componentModel, constructorParams, fieldParams);
+        }
+
+        public static Object createNewInstance(ComponentModel componentModel, Object[] constructorParams, Object[] fieldAutowiredParams) {
+            Constructor<?> constructor = componentModel.getTargetConstructor();
+            if (constructor.getParameterCount() != constructorParams.length) {
+                throw new ComponentInstantiationException(String.format(INVALID_PARAMETERS_COUNT_MSG, componentModel.getComponentType().getName()));
+            }
+            try {
+                final Object instance = constructor.newInstance(constructorParams);
+                componentModel.setInstance(instance);
+                setAutowiredFieldInstances(componentModel, fieldAutowiredParams, instance);
+                invokePostConstruct(componentModel, instance);
+                return instance;
+            } catch (InvocationTargetException | InstantiationException | IllegalAccessException e) {
+                throw new ComponentInstantiationException(e.getMessage(), e);
+            }
+        }
+
+        private static void invokePostConstruct(ComponentModel componentModel, Object instance) {
+            if (componentModel.getPostConstructMethod() == null) {
+                return;
+            }
+            try {
+                componentModel.getPostConstructMethod().invoke(instance);
+            } catch (InvocationTargetException | IllegalAccessException e) {
+                throw new PostConstructException(e.getMessage(), e);
+            }
+        }
+
+        private static void setAutowiredFieldInstances(ComponentModel componentModel, Object[] fieldAutowiredParams, Object instance) throws IllegalAccessException {
+            Field[] autowireAnnotatedFields = componentModel.getAutowireAnnotatedFields();
+            for (int i = 0; i < autowireAnnotatedFields.length; i++) {
+                autowireAnnotatedFields[i].set(instance, autowireAnnotatedFields[i]);
+            }
+        }
     }
 }

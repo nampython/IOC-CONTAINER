@@ -6,6 +6,7 @@ import org.ioc.exception.ClassLocationException;
 import org.ioc.support.HandlerAnnotation;
 import org.ioc.support.HandlerGeneric;
 import org.ioc.stereotype.*;
+import org.jetbrains.annotations.NotNull;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.*;
@@ -43,24 +44,9 @@ public class LoaderComponent extends SettingComponent {
         final Map<Class<?>, Annotation> onlyForComponentClass = this.filterComponentClasses(locatedClass);
         final Set<ComponentModel> componentStorage = new HashSet<>();
         final Map<Class<? extends Annotation>, ComponentModel> aspectHandlerServices = new HashMap<>();
+
         for (Map.Entry<Class<?>, Annotation> component : onlyForComponentClass.entrySet()) {
-            final Class<?> clsComponent = component.getKey();
-            final Annotation annotationComponent = component.getValue();
-            Constructor<?> constructor = this.handlerConstructor(clsComponent);
-            String nameInstance = this.handlerNameInstance(clsComponent.getAnnotations());
-            Method postConstructMethod = this.handlerVoidMethodWithZeroParamsAndAnnotations(clsComponent, PostConstruct.class);
-            Method preDestroyMethod = this.handlerVoidMethodWithZeroParamsAndAnnotations(clsComponent, PreDestroy.class);
-            ScopeType scopeType = this.handlerScopeType(clsComponent);
-            List<Field> fieldWithAutowired = this.handlerFieldWithAutowired(clsComponent, new ArrayList<>());
-            final ComponentModel componentModel = new ComponentModel(
-                    clsComponent,
-                    annotationComponent,
-                    constructor,
-                    nameInstance,
-                    postConstructMethod,
-                    preDestroyMethod,
-                    scopeType,
-                    fieldWithAutowired.toArray(new Field[0]));
+            final ComponentModel componentModel = getComponentModel(component);
             this.maybeAddAspectHandlerService(componentModel, aspectHandlerServices);
             componentModel.setBeans(this.handlerBeans(componentModel));
             this.notifyComponentDetailsCreated(componentModel);
@@ -68,6 +54,29 @@ public class LoaderComponent extends SettingComponent {
         }
         this.applyAspectHandlerComponents(aspectHandlerServices, componentStorage);
         return componentStorage;
+    }
+
+    /**
+     * It takes a class and an annotation and returns a ComponentModel object
+     *
+     * @param component the class and annotation of the component
+     * @return ComponentModel
+     */
+    @NotNull
+    private ComponentModel getComponentModel(Map.Entry<Class<?>, Annotation> component) {
+        final Class<?> clsComponent = component.getKey();
+        final Annotation annotationComponent = component.getValue();
+        Constructor<?> constructor = this.handlerConstructor(clsComponent);
+        String nameInstance = this.handlerNameInstance(clsComponent.getAnnotations());
+        Method postConstructMethod = this.handlerVoidMethodWithZeroParamsAndAnnotations(clsComponent, PostConstruct.class);
+        Method preDestroyMethod = this.handlerVoidMethodWithZeroParamsAndAnnotations(clsComponent, PreDestroy.class);
+        ScopeType scopeType = this.handlerScopeType(clsComponent);
+        List<Field> fieldWithAutowired = this.handlerFieldWithAutowired(clsComponent, new ArrayList<>());
+        return new ComponentModel(
+                clsComponent, annotationComponent,
+                constructor, nameInstance,
+                postConstructMethod, preDestroyMethod,
+                scopeType, fieldWithAutowired.toArray(new Field[0]));
     }
 
     /**
@@ -91,15 +100,23 @@ public class LoaderComponent extends SettingComponent {
             }
         }
         Map<Class<?>, Class<? extends Annotation>> additionalClasses = this.scanningConfiguration.getAdditionalClasses();
-        additionalClasses.forEach(
-                (cls, a) -> {
-                    Annotation annotation = null;
-                    if (a != null && cls.isAnnotationPresent(a)) {
-                        annotation = cls.getAnnotation(a);
-                    }
-
-                    classWithComponent.put(cls, annotation);
-                });
+        for (Map.Entry<Class<?>, Class<? extends Annotation>> entry : additionalClasses.entrySet()) {
+            Annotation annotation = null;
+            Class<?> cls = entry.getKey();
+            Class<? extends Annotation> annotationCls = entry.getValue();
+            if (annotationCls != null && cls.isAnnotationPresent(annotationCls)) {
+                annotation = cls.getAnnotation(annotationCls);
+            }
+            classWithComponent.put(cls, annotation);
+        }
+//        additionalClasses.forEach(
+//                (cls, a) -> {
+//                    Annotation annotation = null;
+//                    if (a != null && cls.isAnnotationPresent(a)) {
+//                        annotation = cls.getAnnotation(a);
+//                    }
+//                    classWithComponent.put(cls, annotation);
+//                });
         return classWithComponent;
     }
 
