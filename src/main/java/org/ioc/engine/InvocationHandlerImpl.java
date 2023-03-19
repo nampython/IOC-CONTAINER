@@ -1,4 +1,6 @@
-package org.ioc;
+package org.ioc.engine;
+
+import org.ioc.engine.ComponentModel;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;

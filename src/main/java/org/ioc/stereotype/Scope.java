@@ -1,7 +1,7 @@
 package org.ioc.stereotype;
 
 
-import org.ioc.ScopeType;
+import org.ioc.engine.ScopeType;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

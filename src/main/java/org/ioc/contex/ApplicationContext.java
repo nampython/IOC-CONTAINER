@@ -1,8 +1,7 @@
 package org.ioc.contex;
 
-import org.ioc.ComponentModel;
+import org.ioc.engine.ComponentModel;
 import org.ioc.contex.enviroment.EnvironmentSource;
-import org.ioc.contex.factory.BeanFactory;
 import org.ioc.contex.factory.ListableBeanFactory;
 
 import java.lang.annotation.Annotation;

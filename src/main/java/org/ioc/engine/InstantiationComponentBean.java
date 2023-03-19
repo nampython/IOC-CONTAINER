@@ -2,7 +2,6 @@ package org.ioc.engine;
 
 import javassist.util.proxy.ProxyFactory;
 import javassist.util.proxy.ProxyObject;
-import org.ioc.*;
 import org.ioc.exception.BeanInstantiationException;
 import org.ioc.exception.ComponentInstantiationException;
 import org.ioc.exception.PostConstructException;

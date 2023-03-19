@@ -1,7 +1,7 @@
 package org.ioc.configuration;
 
 
-import org.ioc.ComponentModel;
+import org.ioc.engine.ComponentModel;
 import org.ioc.support.DependencyResolver;
 
 import java.util.ArrayList;

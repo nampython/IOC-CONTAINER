@@ -1,6 +1,6 @@
 package org.ioc.configuration;
 
-import org.ioc.ComponentDetailsCreated;
+import org.ioc.engine.ComponentDetailsCreated;
 
 import java.lang.annotation.Annotation;
 import java.util.*;

@@ -1,6 +1,6 @@
 package org.ioc.support;
 
-import org.ioc.DependencyParam;
+import org.ioc.engine.DependencyParam;
 
 public interface DependencyResolver {
 

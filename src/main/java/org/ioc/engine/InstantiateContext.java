@@ -1,6 +1,5 @@
 package org.ioc.engine;
 
-import org.ioc.ComponentModel;
 import org.ioc.exception.ComponentInstantiationException;
 
 import java.util.Collection;

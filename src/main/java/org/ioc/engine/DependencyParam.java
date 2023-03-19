@@ -1,9 +1,8 @@
-package org.ioc;
+package org.ioc.engine;
 
 import org.ioc.support.DependencyResolver;
 
 import java.lang.annotation.Annotation;
-import java.util.Arrays;
 
 public class DependencyParam {
     private final Class<?> dependencyType;

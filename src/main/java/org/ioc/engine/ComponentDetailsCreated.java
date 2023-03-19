@@ -1,4 +1,6 @@
-package org.ioc;
+package org.ioc.engine;
+
+import org.ioc.engine.ComponentModel;
 
 @FunctionalInterface
 public interface ComponentDetailsCreated {

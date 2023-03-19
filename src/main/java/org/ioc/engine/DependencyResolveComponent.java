@@ -1,6 +1,5 @@
 package org.ioc.engine;
 
-import org.ioc.*;
 import org.ioc.configuration.InstantiationConfiguration;
 import org.ioc.exception.CircularDependencyException;
 import org.ioc.exception.ComponentInstantiationException;

@@ -1,5 +1,7 @@
-package org.ioc;
+package org.ioc.engine;
 
+
+import org.ioc.engine.ComponentModel;
 
 import java.lang.annotation.Annotation;
 

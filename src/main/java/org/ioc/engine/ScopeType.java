@@ -1,4 +1,4 @@
-package org.ioc;
+package org.ioc.engine;
 
 public enum ScopeType {
     /**

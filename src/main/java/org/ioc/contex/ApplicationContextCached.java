@@ -1,6 +1,6 @@
 package org.ioc.contex;
 
-import org.ioc.ComponentModel;
+import org.ioc.engine.ComponentModel;
 import org.ioc.contex.factory.ApplicationContextInternal;
 
 import java.lang.annotation.Annotation;

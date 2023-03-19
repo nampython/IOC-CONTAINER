@@ -1,7 +1,7 @@
 package org.ioc.contex.factory;
 
-import org.ioc.ComponentBeanModel;
-import org.ioc.ComponentModel;
+import org.ioc.engine.ComponentBeanModel;
+import org.ioc.engine.ComponentModel;
 import org.ioc.contex.ApplicationContext;
 import org.ioc.contex.enviroment.EnvironmentSource;
 import org.ioc.engine.InstantiationComponentBean;

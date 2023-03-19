@@ -1,4 +1,4 @@
-package org.ioc;
+package org.ioc.engine;
 
 import org.ioc.exception.ComponentInstantiationException;
 import org.ioc.exception.PostConstructException;
