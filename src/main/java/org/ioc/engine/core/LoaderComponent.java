@@ -1,6 +1,7 @@
-package org.ioc.engine;
+package org.ioc.engine.core;
 
 import org.ioc.configuration.ScanningConfiguration;
+import org.ioc.engine.*;
 import org.ioc.exception.ClassLocationException;
 import org.ioc.support.HandlerAnnotation;
 import org.ioc.support.HandlerGeneric;

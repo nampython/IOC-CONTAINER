@@ -1,5 +1,6 @@
-package org.ioc.engine;
+package org.ioc.engine.core;
 
+import org.ioc.engine.ClassLoaderContext;
 import org.ioc.exception.ClassLocationException;
 
 import java.io.File;

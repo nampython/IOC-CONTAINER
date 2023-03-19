@@ -1,6 +1,7 @@
-package org.ioc.engine;
+package org.ioc.engine.core;
 
 import org.ioc.configuration.InstantiationConfiguration;
+import org.ioc.engine.*;
 import org.ioc.exception.CircularDependencyException;
 import org.ioc.exception.ComponentInstantiationException;
 import org.ioc.support.HandlerAnnotation;

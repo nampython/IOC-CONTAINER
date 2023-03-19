@@ -4,7 +4,7 @@ import org.ioc.engine.ComponentBeanModel;
 import org.ioc.engine.ComponentModel;
 import org.ioc.contex.ApplicationContext;
 import org.ioc.contex.enviroment.EnvironmentSource;
-import org.ioc.engine.InstantiationComponentBean;
+import org.ioc.engine.core.InstantiationComponentBean;
 import org.ioc.exception.AlreadyInitializedException;
 import org.ioc.exception.BeansException;
 import org.ioc.exception.NoSuchBeanDefinitionException;
