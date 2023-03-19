@@ -53,7 +53,7 @@ public class ScanningConfiguration extends CoreConfiguration{
         return classLoader;
     }
 
-    public Set<ComponentDetailsCreated> getServiceDetailsCreatedCallbacks() {
+    public Set<ComponentDetailsCreated> getComponentDetailsCreatedCallbacks() {
         return this.componentDetailsCreateds;
     }
 

@@ -1,6 +1,6 @@
 package org.ioc.engine;
 
-import org.ioc.support.HandlerGeneric;
+import org.ioc.engine.core.LoaderComponent;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.ParameterizedType;
@@ -16,7 +16,7 @@ public class DependencyParamCollection extends DependencyParam {
                                      Class<?> dependencyType,
                                      String instanceName,
                                      Annotation[] annotations) {
-        super(HandlerGeneric.getRawType(parameterizedType), instanceName, annotations);
+        super(LoaderComponent.HandlerGeneric.getRawType(parameterizedType), instanceName, annotations);
         this.collectionType = dependencyType;
     }
 

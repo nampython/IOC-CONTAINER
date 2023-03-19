@@ -1,14 +1,12 @@
 package org.ioc.engine;
 
 
-import org.ioc.engine.ComponentModel;
-
 import java.lang.annotation.Annotation;
 
 public class MethodAspectHandlerDto {
 
     /**
-     * Service details of the aspect handler.
+     * Component details of the aspect handler.
      */
     private final ComponentModel componentModel;
 
