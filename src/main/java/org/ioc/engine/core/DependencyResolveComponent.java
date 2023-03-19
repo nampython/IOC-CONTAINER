@@ -20,10 +20,15 @@ public class DependencyResolveComponent {
 
 
     /**
-     * Resolve the dependencies of a component model by recursively resolving the dependencies of its dependencies
+     * Recursively iterate all services and resolve their dependencies by
+     * creating {@link DependencyParam} which is directly linked by the {@link ComponentModel} of a given dependency.
+     * This will ensure that whenever the dependency is instantiated, the dependant service will instantly have access
+     * to the instance.
      *
-     * @param componentModels The list of components that are being resolved.
-     * @return A list of EnqueuedComponentDetails
+     * @param componentModels - All the available model component
+     * @return Components sorted by their dependencies
+     * @throws ComponentInstantiationException - if dependency is missing
+     * @throws CircularDependencyException     - if resolution is impossible due to circular dependency
      */
     public List<EnqueuedComponentDetails> resolveDependencies(Collection<ComponentModel> componentModels) {
         final List<EnqueuedComponentDetails> resolvedDependencies = new ArrayList<>();
@@ -35,6 +40,17 @@ public class DependencyResolveComponent {
         return resolvedDependencies;
     }
 
+    /**
+     * Checks aspects, constructor and field parameters for a given component and if there are any,
+     * recursively traverses them so that a dependency order is achieved.
+     * Every {@link DependencyParam} will be linked with a compatible {@link ComponentModel}.
+     * Also, checks for circular is missing dependencies.
+     *
+     * @param componentModel         The component model to be resolved
+     * @param resolvedDependencies   A list of all the components that have been resolved.
+     * @param allAvailableComponents All components that have been registered in the container
+     * @param componentModelTrace    A list of components that are currently being resolved.
+     */
     private void resolveDependency(ComponentModel componentModel, List<EnqueuedComponentDetails> resolvedDependencies,
                                    List<ComponentModel> allAvailableComponents, LinkedList<ComponentModel> componentModelTrace) {
 
@@ -127,7 +143,16 @@ public class DependencyResolveComponent {
     }
 
     private List<ComponentModel> loadCompatibleComponentDetails(DependencyParamCollection dependencyParam, List<ComponentModel> allAvailableComponents) {
-        return null;
+        final List<ResolvedComponentDto> compatibleComponent = HandlerDependencyParam.findAllCompatibleComponents(
+                dependencyParam, allAvailableComponents
+        );
+
+        dependencyParam.setComponentModels(compatibleComponent.stream()
+                .map(ResolvedComponentDto::getActualComponentModel)
+                .collect(Collectors.toList())
+        );
+
+        return compatibleComponent.stream().map(ResolvedComponentDto::getProducerComponentModel).collect(Collectors.toList());
     }
 
     private List<ComponentModel> loadCompatibleComponentDetails(DependencyParam dependencyParam, List<ComponentModel> allAvailableComponents) {
