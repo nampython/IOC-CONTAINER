@@ -4,9 +4,9 @@ import org.ioc.configuration.ScanningConfiguration;
 import org.ioc.engine.*;
 import org.ioc.exception.ClassLocationException;
 import org.ioc.support.HandlerAnnotation;
-import org.ioc.support.HandlerGeneric;
 import org.ioc.stereotype.*;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.*;
@@ -87,18 +87,20 @@ public class LoaderComponent extends SettingComponent {
      * @return Classes with annotation
      */
     private Map<Class<?>, Annotation> filterComponentClasses(Set<Class<?>> scannedClasses) {
-        final Set<Class<? extends Annotation>> componentsAnnotations = this.scanningConfiguration.getComponentAnnotations();
+        final Set<Class<? extends Annotation>> availabeComponent = this.scanningConfiguration.getComponentAnnotations();
         final Map<Class<?>, Annotation> classWithComponent = new HashMap<>();
+        // Get all classes that contain @Component.
         for (Class<?> cls : scannedClasses) {
             if (!cls.isInterface() && !cls.isEnum() && !cls.isAnnotation()) {
                 for (Annotation annotation : cls.getAnnotations()) {
-                    if (componentsAnnotations.contains(annotation.annotationType())) {
+                    if (availabeComponent.contains(annotation.annotationType())) {
                         classWithComponent.put(cls, annotation);
                         break;
                     }
                 }
             }
         }
+        // Getting classes from scanning configs.
         Map<Class<?>, Class<? extends Annotation>> additionalClasses = this.scanningConfiguration.getAdditionalClasses();
         for (Map.Entry<Class<?>, Class<? extends Annotation>> entry : additionalClasses.entrySet()) {
             Annotation annotation = null;
@@ -266,7 +268,7 @@ public class LoaderComponent extends SettingComponent {
      * @param componentModel - newly mapped service.
      */
     private void notifyComponentDetailsCreated(ComponentModel componentModel) {
-        for (ComponentDetailsCreated callback : this.scanningConfiguration.getServiceDetailsCreatedCallbacks()) {
+        for (ComponentDetailsCreated callback : this.scanningConfiguration.getComponentDetailsCreatedCallbacks()) {
             callback.componentDetailsCreated(componentModel);
             for (ComponentBeanModel bean : componentModel.getBeans()) {
                 callback.componentDetailsCreated(bean);
@@ -282,7 +284,7 @@ public class LoaderComponent extends SettingComponent {
      * @param aspectHandlerServices - a map of aspect handler services, keyed by the annotation type
      */
     @SuppressWarnings("unchecked")
-    private void maybeAddAspectHandlerService(ComponentModel componentModel, Map<Class<? extends Annotation>, ComponentModel> aspectHandlerServices) {
+    private void maybeAddAspectHandlerService(@NotNull ComponentModel componentModel, Map<Class<? extends Annotation>, ComponentModel> aspectHandlerServices) {
         if (ComponentMethodAspectHandler.class.isAssignableFrom(componentModel.getComponentType())) {
             final Type[] genericTypeArguments = HandlerGeneric.getGenericTypeArguments(componentModel.getComponentType(), ComponentMethodAspectHandler.class);
             if (genericTypeArguments != null && genericTypeArguments.length == 1) {
@@ -297,10 +299,10 @@ public class LoaderComponent extends SettingComponent {
 
 
     /**
-     * It takes a component model and returns a collection of bean models
+     * Scans a given class for methods that are considered beans.
      *
-     * @param componentModel - The component model that is being scanned.
-     * @return - A collection of ComponentBeanModel objects.
+     * @param componentModel - the service from where the bean is being called.
+     * @return array or method references that are bean compliant.
      */
     private Collection<ComponentBeanModel> handlerBeans(ComponentModel componentModel) {
         final Set<Class<? extends Annotation>> beanAnnotations = this.scanningConfiguration.getBeanAnnotations();
@@ -337,5 +339,49 @@ public class LoaderComponent extends SettingComponent {
     public void init() {
         this.scanningConfiguration.getComponentAnnotations().add(Component.class);
         this.scanningConfiguration.getBeanAnnotations().add(Bean.class);
+    }
+
+    public static class HandlerGeneric {
+        /**
+         * Gets the generic type arguments of a given class.
+         * EG.
+         * class Abc implements Handler<String> {}
+         * If we call getGenericTypeArguments(Abc.class, Handler.class) we will get String as a result.
+         *
+         * @param cls          - class to be looked up.
+         * @param genericClass - generic class or interface from which we need to extract the types.
+         * @return -
+         */
+        public static Type @Nullable [] getGenericTypeArguments(Class<?> cls, Class<?> genericClass) {
+            final Optional<ParameterizedType> genericClsType = Arrays.stream(cls.getGenericInterfaces())
+                    .filter(type -> type instanceof ParameterizedType)
+                    .filter(type -> ((ParameterizedType) type).getRawType() == genericClass)
+                    .map(type -> (ParameterizedType) type)
+                    .findFirst();
+            if (genericClsType.isPresent()) {
+                return genericClsType.get().getActualTypeArguments();
+            } else {
+                return cls.getGenericSuperclass() != Object.class ? getGenericTypeArguments((Class<?>) cls.getGenericSuperclass(), genericClass) : null;
+            }
+        }
+
+        public static Class<?> getRawType(ParameterizedType type) {
+            return getRawType(type, null);
+        }
+
+        private static Class<?> getRawType(ParameterizedType type, Class<?> lastType) {
+            final Type actualTypeArgument = type.getActualTypeArguments()[0];
+
+            if (actualTypeArgument instanceof Class) {
+                return (Class<?>) actualTypeArgument;
+            }
+            if (actualTypeArgument instanceof WildcardType) {
+                return lastType;
+            }
+            return getRawType(
+                    (ParameterizedType) actualTypeArgument,
+                    (Class<?>) ((ParameterizedType) actualTypeArgument).getRawType()
+            );
+        }
     }
 }
