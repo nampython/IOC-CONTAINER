@@ -4,6 +4,7 @@ import org.ioc.configuration.InstantiationConfiguration;
 import org.ioc.engine.*;
 import org.ioc.exception.CircularDependencyException;
 import org.ioc.exception.ComponentInstantiationException;
+import org.ioc.support.DependencyResolver;
 import org.ioc.support.HandlerAnnotation;
 import org.ioc.stereotype.Nullable;
 import org.ioc.stereotype.Qualifier;
@@ -59,14 +60,14 @@ public class DependencyResolveComponent {
 
         if (!resolvedDependencies.contains(enqueuedComponentDetails)) {
             componentModelTrace.addFirst(componentModel);
-//            final Set<MethodAspectHandlerDto> aspects = service.getMethodAspectHandlers()
-//                    .values().stream()
-//                    .flatMap(Collection::stream)
-//                    .collect(Collectors.toSet());
-//
-//            for (MethodAspectHandlerDto aspect : aspects) {
-//                this.resolveDependency(aspect.getServiceDetails(), resolvedDependencies, allAvailableServices, serviceTrace);
-//            }
+            final Set<MethodAspectHandlerDto> aspects = componentModel.getMethodAspectHandlers()
+                    .values().stream()
+                    .flatMap(Collection::stream)
+                    .collect(Collectors.toSet());
+
+            for (MethodAspectHandlerDto aspect : aspects) {
+                this.resolveDependency(aspect.getComponentModel(), resolvedDependencies, allAvailableComponents, componentModelTrace);
+            }
             // Get all params from a specified component. It includes params of constructor and fields
             List<DependencyParam> dependencyParams = new ArrayList<>() {{
                 addAll(enqueuedComponentDetails.getConstructorParams());
@@ -102,44 +103,49 @@ public class DependencyResolveComponent {
         // compare to all the available component. If not exist, throw an exception.
         if (dependencyParam.getInstanceName() != null) {
             ResolvedComponentDto resolvedComponentDto = HandlerDependencyParam.getNamedInstanceService(dependencyType, instanceName, allAvailableComponents);
+
             if (resolvedComponentDto != null) {
                 dependencyParam.setComponentModel(resolvedComponentDto.getActualComponentModel());
                 return List.of(resolvedComponentDto.getProducerComponentModel());
-            } else {
-                if (dependencyParam.isRequired()) {
-                    throw new ComponentInstantiationException(String.format(
-                            "Could not create instance of '%s'. Qualifier '%s' was not found.",
-                            dependencyType,
-                            dependencyParam.getInstanceName()
-                    ));
-                }
+            }
+            if (dependencyParam.isRequired()) {
+                throw new ComponentInstantiationException(String.format(
+                        "Could not create instance of '%s'. Qualifier '%s' was not found.",
+                        dependencyType,
+                        dependencyParam.getInstanceName()
+                ));
             }
             // In case of parameter's NameInstance is  equals null. That means @Qualifier is not exist.
+        }
+        final List<ComponentModel> resolvedComponentModels;
+        if (dependencyParam instanceof DependencyParamCollection) {
+            resolvedComponentModels = this.loadCompatibleComponentDetails((DependencyParamCollection) dependencyParam, allAvailableComponents);
         } else {
-            final List<ComponentModel> resolvedComponentModels;
-            if (dependencyParam instanceof DependencyParamCollection) {
-                resolvedComponentModels = this.loadCompatibleComponentDetails((DependencyParamCollection) dependencyParam, allAvailableComponents);
-            } else {
-                resolvedComponentModels = this.loadCompatibleComponentDetails(dependencyParam, allAvailableComponents);
-            }
-            assert resolvedComponentModels != null;
-            if (!resolvedComponentModels.isEmpty()) {
-                return resolvedComponentModels;
-            }
-//        final DependencyResolver dependencyResolver = this.getDependencyResolver(dependencyParam);
-//        if (dependencyResolver != null) {
-//            //TODO: do not set instance, add support for proxy and singleton dependency resolvers
-//            dependencyParam.setInstance(dependencyResolver.resolve(dependencyParam));
-//            dependencyParam.setDependencyResolver(dependencyResolver);
-//            return List.of();
-//        }
-            if (dependencyParam.isRequired()) {
-                throw new ComponentInstantiationException(
-                        String.format("Could not create instance of '%s'. Parameter '%s' implementation was not found", dependencyType, dependencyType.getName())
-                );
-            }
+            resolvedComponentModels = this.loadCompatibleComponentDetails(dependencyParam, allAvailableComponents);
+        }
+        assert resolvedComponentModels != null;
+        if (!resolvedComponentModels.isEmpty()) {
+            return resolvedComponentModels;
+        }
+        final DependencyResolver dependencyResolver = this.getDependencyResolver(dependencyParam);
+        if (dependencyResolver != null) {
+            //TODO: do not set instance, add support for proxy and singleton dependency resolvers
+            dependencyParam.setInstance(dependencyResolver.resolve(dependencyParam));
+            dependencyParam.setDependencyResolver(dependencyResolver);
+            return List.of();
+        }
+        if (dependencyParam.isRequired()) {
+            throw new ComponentInstantiationException(
+                    String.format("Could not create instance of '%s'. Parameter '%s' implementation was not found", dependencyType, dependencyType.getName())
+            );
         }
         return List.of();
+    }
+
+    private DependencyResolver getDependencyResolver(DependencyParam dependencyParam) {
+        return this.configuration.getDependencyResolvers().stream()
+                .filter(dr -> dr.canResolve(dependencyParam))
+                .findFirst().orElse(null);
     }
 
     private List<ComponentModel> loadCompatibleComponentDetails(DependencyParamCollection dependencyParam, List<ComponentModel> allAvailableComponents) {

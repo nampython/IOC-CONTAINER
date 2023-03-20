@@ -337,7 +337,8 @@ public class LoaderComponent extends SettingComponent {
      */
     @Override
     public void init() {
-        this.scanningConfiguration.getComponentAnnotations().add(Component.class);
+        this.scanningConfiguration.getComponentAnnotations().addAll(
+                List.of(Component.class, Configuration.class, Service.class,  Repository.class));
         this.scanningConfiguration.getBeanAnnotations().add(Bean.class);
     }
 
