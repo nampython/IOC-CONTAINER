@@ -19,7 +19,7 @@
 
 
 # IoC Container
-Have you ever wondered how Spring core works? I've always been curious how it works, that why I created this project. It mainly used Java Rejection and supports most annotations like @Service, @Autowire, @Bean, @PostConstructor … Manage instantiated Components by an ApplicationContext (Reloading, updating, Getting) Bean like Spring Core. Handle custom components and bean scopes by using proxies.  Enrich Components with aspects. And  automatically resolve dependencies
+As a curious and passionate software developer, I always wondered how Spring Core works. To better understand its inner workings, I created this project that mainly uses Java Reflection and supports most annotations like @Component, @Autowire, @Bean, @PostConstructor, and more. Manage instantiated Components by an ApplicationContext (reloading, updating, getting) Bean like Spring Core. Handle custom components and bean scopes by using proxies. Enrich Components with aspects. And  automatically resolve dependencies
 
 
 ## Table of Contents
