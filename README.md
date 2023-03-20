@@ -25,7 +25,7 @@ As a curious and passionate software developer, I always wondered how Spring Cor
 ## Table of Contents
 * [General Information](#general-information)
 * [Prerequisites](#prerequisites)
-* [features](#features)
+* [Main Features](#main-features)
 * [Installation & Getting Started](#prerequisites)
 * [More info](#more-info)
 
