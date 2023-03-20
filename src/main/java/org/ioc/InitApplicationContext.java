@@ -112,7 +112,7 @@ public class InitApplicationContext {
             for (Method declaredMethod : componentModel.getComponentType().getDeclaredMethods()) {
                 boolean isStartUpMethod = (declaredMethod.getReturnType() != void.class && declaredMethod.getReturnType() != Void.class)
                         || !declaredMethod.isAnnotationPresent(StartUp.class);
-                if (isStartUpMethod) {
+                if (!isStartUpMethod) {
                     declaredMethod.setAccessible(true);
                     final Object[] params = Arrays.stream(declaredMethod.getParameterTypes())
                             .map(applicationContext::getDefineBean)
