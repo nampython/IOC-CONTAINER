@@ -25,13 +25,13 @@ As a curious and passionate software developer, I always wondered how Spring Cor
 ## Table of Contents
 * [General Information](#general-information)
 * [Prerequisites](#prerequisites)
-* [Installation & Getting Started](#installation)
+* [Installation & Getting Started](#prerequisites)
 * [More info](#more-info)
 
 ## General Information
-A library that clones the functionality of Spring Core framework. It supports most annotations like  @Component, @Service, @Repository, @Configuration, @Autowire, @Qualifier, @`PostConstruct`, @`PreDestroy`.... Besides including 3 modes for a bean (`SINGLETON`, `PROTOTYPE`, `PROXY`). Building from scratch helps us understand how IoC Containers work under the hood. 
+A library that replicates the functionality of the Spring Core framework. It supports most annotations such as @Component, @Service, @Repository, @Configuration, @Autowire, @Qualifier, @PostConstruct, @PreDestroy... In addition, there are 3 modes for a bean (SINGLETON, PROTOTYPE, PROXY). Building from scratch helps us understand how IoC Containers work under the hood.
 
-It’s really hard and complicated to know how spring core works. Because it includes many modules and is made by many people. I try to integrate many components into one and make it simple by  following these steps
+It’s really hard and complicated to know how spring core works. Because it is composed of many modules and is produced by many people. I try to integrate many components into one and make it simple by following these steps:
 
 - Finding and loading all classes available in the project and pushing them into a set collection. There are several issues when loading all classes.
 - Scanning and filtering the classes that are identified are components. Mapping classes that I called a component model.
@@ -45,7 +45,7 @@ It’s really hard and complicated to know how spring core works. Because it inc
 - Java reflection (Method, Annotation, Constructor…): [https://www.oracle.com/technical-resources/articles/java/javareflection.html](https://www.oracle.com/technical-resources/articles/java/javareflection.html)
 - Basic Spring Core framework and know several annotations like @Bean, @Service, @Postconstruct,  @AfterDestroy, @Autowired…:[https://www.baeldung.com/spring-core-annotations](https://www.baeldung.com/spring-core-annotations)
 - Design Pattern:
-    → Builder
+    →  Singleton, Prototype, Builder,
     
 ## Installation & Getting Started
   - Run **'mvn clean install'** and get the dependency in the m2 folder.
