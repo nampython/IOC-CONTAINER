@@ -33,19 +33,22 @@ A library that replicates the functionality of the Spring Core framework. It sup
 
 It’s really hard and complicated to know how spring core works. Because it is composed of many modules and is produced by many people. I try to integrate many components into one and make it simple by following these steps:
 
-- Finding and loading all classes available in the project and pushing them into a set collection. There are several issues when loading all classes.
-- Scanning and filtering the classes that are identified are components. Mapping classes that I called a component model.
-- After having all components in the project. We need to instantiate these components to become an instance.
-- Made Application Context: As we know in Spring having an interface applicationContext to retrieve all beans. I also made an applicationContext interface to retrieve it from getting, reloading, and updating beans.
+- Finding and loading all classes available in the project and pushing them into a set collection. Pay attention to getting classes because classes in directory is different compared to classes in the directory
+- Scanning and filtering the classes that are identified are components.
+- Instantiate these components to become an instance.
+- Made an Application Context interface. As we know Spring has an interface applicationContext to retrieve all beans. I also made an applicationContext interface to retrieve it from getting, reloading, and updating beans.
 
 
 ## Prerequisites
 - **Dealing with class:** [https://www.tutorialspoint.com/java/lang/java_lang_class.htm](https://www.tutorialspoint.com/java/lang/java_lang_class.htm)
 - **Work with files**: [https://docs.oracle.com/javase/7/docs/api/java/io/File.html](https://docs.oracle.com/javase/7/docs/api/java/io/File.html)
-- Java reflection (Method, Annotation, Constructor…): [https://www.oracle.com/technical-resources/articles/java/javareflection.html](https://www.oracle.com/technical-resources/articles/java/javareflection.html)
-- Basic Spring Core framework and know several annotations like @Bean, @Service, @Postconstruct,  @AfterDestroy, @Autowired…:[https://www.baeldung.com/spring-core-annotations](https://www.baeldung.com/spring-core-annotations)
-- Design Pattern:
-    →  Singleton, Prototype, Builder,
+- **Java reflection (Method, Annotation, Constructor…)**: [https://www.oracle.com/technical-resources/articles/java/javareflection.html](https://www.oracle.com/technical-resources/articles/java/javareflection.html)
+- **Basic Spring Core framework**: Understanding how spring core work and know several basic annotations like @Bean, @Service, @Postconstruct,  @AfterDestroy, @Autowired…:[https://www.baeldung.com/spring-core-annotations](https://www.baeldung.com/spring-core-annotations)
+- **Design Pattern:**
+    - Singleton
+    - Prototype
+    - Builder
+    - Proxy
     
 ## Installation & Getting Started
   - Run **'mvn clean install'** and get the dependency in the m2 folder.
@@ -83,13 +86,20 @@ Configuration config = new Configuration()
                 .and();
 ```
 
-Below is the supported annotations in this library
+**Below are the supported annotations in this library:** 
 
-- @Component - @Service - @Configuration  - @Repository
-    - Actually, We can use a configuration class to provide custom annotations that can act like @Bean and @Service.
-- @Bean
-- …
-- **More info**
+- `@Component` - `@Service` - `@Configuration`  - `@Repository`
+    - Actually, We can use a configuration class to provide custom annotations that can act like @Bean and @Component.
+- `@Bean` - Specify the bean-producing method.
+- `@Scope` - Specify the scope of the component. **SINGLETON**, **PROTOTYPE,** or **PROXY**.
+- `@Autowired` - Inject an instance in the constructor or field of a object
+- `@PostConstruct` - Specify a method that will be executed after the component has been created.
+- `@PreDestroy` - Specify a method that will be executed just before the component has been disposed.
+- `@StartUp` - Specify the startup method for the app.
+- `@AliasFor` - Use this annotation to integrate your own annotations with InitApplicationContext. AliasFor works with Autowired, NamedInstance, Nullable, PostConstruct, PreDestroy, Qualifier.
+- `@NamedInstance` - Specify the name of the component/ bean.
+- `@Nullable` - required dependency can be null.
+- `@Qualifier` - Specify the name of the dependency that you are requiring.
 
 
 ## More info
