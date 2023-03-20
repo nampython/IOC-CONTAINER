@@ -25,6 +25,7 @@ As a curious and passionate software developer, I always wondered how Spring Cor
 ## Table of Contents
 * [General Information](#general-information)
 * [Prerequisites](#prerequisites)
+* [features](#features)
 * [Installation & Getting Started](#prerequisites)
 * [More info](#more-info)
 
@@ -49,17 +50,25 @@ It’s really hard and complicated to know how spring core works. Because it is 
     - Prototype
     - Builder
     - Proxy
-    
+## Main Features
+   - Create an instance of a specified  component
+   - Automatically resolve dependencies
+   - Create Beans
+   - Add your own custom mapping annotations for component and beans
+   - Manage instantiated components by an applicationContext interface.
+   - Reload instantiated components
+   - Handle custom components and bean scopes by using proxies.
+   - Enrich components with aspects
+
 ## Installation & Getting Started
-  - Run **'mvn clean install'** and get the dependency in the m2 folder.
-    - Just import the dependency into your project.
-        ```xml
+  - Run **'mvn clean install'** and get the dependency in the m2 folder.Just import the dependency into your project.
+      ```xml
         <dependency>
           <groupId>org.ioc</groupId>
           <artifactId>IOC-Container</artifactId>
           <version>1.0-SNAPSHOT</version>
         </dependency>
-        ```
+      ```
         
 - In your main method call '`InitApplicationContext`.run(YourStartupClass.class) and annotate your startup class with @Component
     
@@ -70,21 +79,20 @@ It’s really hard and complicated to know how spring core works. Because it is 
             InitApplicationContext.run(ApplicationEntryPoint.class, config);
      }
     ```
-    
+  
+- You can also run the app with 'InitApplicationContext.run(YourStartupClass.class, new Configuration()).
 
-You can also run the app with 'InitApplicationContext.run(YourStartupClass.class, new MagicConfiguration()). 
-
-```java
-Configuration config = new Configuration()
-                .instantiations()
-                .addDependencyResolver(new StringConfigProducer())
-                .addDependencyResolver(new StringConfigProducer2())
-                .and()
-                .scanning() // add custom Componetn and Bean
-                .addComponentAnnotation(CustomServiceAnnotation.class)
-                .addBeanAnnotation(CustomBeanAnnotation.class)
-                .and();
-```
+    ```java
+    Configuration config = new Configuration()
+                    .instantiations()
+                    .addDependencyResolver(new StringConfigProducer())
+                    .addDependencyResolver(new StringConfigProducer2())
+                    .and()
+                    .scanning() // add custom Componetn and Bean
+                    .addComponentAnnotation(CustomServiceAnnotation.class)
+                    .addBeanAnnotation(CustomBeanAnnotation.class)
+                    .and();
+    ```
 
 **Below are the supported annotations in this library:** 
 
