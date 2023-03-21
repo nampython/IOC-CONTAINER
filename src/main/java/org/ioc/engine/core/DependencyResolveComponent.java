@@ -166,7 +166,7 @@ public class DependencyResolveComponent {
         if (compatibleComponents.size() > 1) {
             throw new ComponentInstantiationException(String.format(
                     "Could not create instance of '%s'. "
-                            + "There are more than one compatible services: (%s)."
+                            + "There are more than one compatible component: (%s)."
                             + "Please consider using '%s' annotation.",
                     dependencyParam.getDependencyType(),
                     compatibleComponents.stream().map(ResolvedComponentDto::getActualComponentModel).collect(Collectors.toList()),

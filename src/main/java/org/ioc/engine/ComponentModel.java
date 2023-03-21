@@ -232,11 +232,11 @@ public class ComponentModel {
             return super.equals(other);
         }
 
-        final ComponentModel otherService = (ComponentModel) other;
-        return Objects.equals(otherService.getInstanceName(), this.getInstanceName())
-                && Objects.equals(otherService.getAnnotation(), this.getAnnotation())
-                && Objects.equals(otherService.getComponentType(), this.getComponentType())
-                && Objects.equals(otherService.getScopeType(), this.getScopeType());
+        final ComponentModel otherComponent = (ComponentModel) other;
+        return Objects.equals(otherComponent.getInstanceName(), this.getInstanceName())
+                && Objects.equals(otherComponent.getAnnotation(), this.getAnnotation())
+                && Objects.equals(otherComponent.getComponentType(), this.getComponentType())
+                && Objects.equals(otherComponent.getScopeType(), this.getScopeType());
     }
 
     @Override
