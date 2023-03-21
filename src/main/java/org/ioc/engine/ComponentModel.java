@@ -102,17 +102,17 @@ public class ComponentModel {
         if (this.getScopeType() == ScopeType.PROTOTYPE) {
             if (this.instance == null) {
                 return null;
-            } else if (!this.instanceRequested) {
+            }
+            if (!this.instanceRequested) {
                 this.instanceRequested = true;
                 return this.instance;
             }
             return ObjectInstantiation.createNewInstance(this);
-        } else {
-            if (this.proxyInstance != null) {
-                return this.proxyInstance;
-            }
-            return instance;
         }
+        if (this.proxyInstance != null) {
+            return this.proxyInstance;
+        }
+        return instance;
     }
 
     public void setProxyInstance(Object proxyInstance) {
@@ -207,6 +207,7 @@ public class ComponentModel {
     public Constructor<?> getTargetConstructor() {
         return targetConstructor;
     }
+
     /**
      * We are using the componentType hashcode in order to make this class unique
      * when using in in sets.
