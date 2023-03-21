@@ -163,11 +163,7 @@ public class ApplicationContextInternal implements EnvironmentSource, Applicatio
                 break;
             }
         }
-        if (component == null) {
-            throw new BeansException(String.format("No qualifying bean of type '%s' available", componentType.getName()));
-        } else {
-            return component;
-        }
+        return component;
     }
 
     /**
