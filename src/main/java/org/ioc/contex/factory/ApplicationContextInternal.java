@@ -16,8 +16,8 @@ import java.util.stream.Collectors;
 public class ApplicationContextInternal implements EnvironmentSource, ApplicationContext {
     private static final String ALREADY_INITIALIZED_MSG = "Dependency container already initialized.";
     private static final String COMPONENT_NOT_FOUND_FORMAT = "Component \"%s\" was not found.";
-    private Set<Class<?>> allLocatedClasses;
-    private List<ComponentModel> componentsAndBean;
+    protected Set<Class<?>> allLocatedClasses;
+    protected List<ComponentModel> componentsAndBean;
     private boolean isInit;
 
     // This is the constructor for the ApplicationContextInternal class. It sets the `isInit` flag to false.
