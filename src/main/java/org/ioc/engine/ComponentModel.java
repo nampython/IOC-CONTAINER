@@ -207,6 +207,47 @@ public class ComponentModel {
     public Constructor<?> getTargetConstructor() {
         return targetConstructor;
     }
+    /**
+     * We are using the componentType hashcode in order to make this class unique
+     * when using in in sets.
+     *
+     * @return hashcode.
+     */
+    @Override
+    public int hashCode() {
+        if (this.componentType == null) {
+            return super.hashCode();
+        }
+
+        return this.componentType.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if (!(other instanceof ComponentModel)) {
+            return false;
+        }
+
+        if (this.componentType == null) {
+            return super.equals(other);
+        }
+
+        final ComponentModel otherService = (ComponentModel) other;
+        return Objects.equals(otherService.getInstanceName(), this.getInstanceName())
+                && Objects.equals(otherService.getAnnotation(), this.getAnnotation())
+                && Objects.equals(otherService.getComponentType(), this.getComponentType())
+                && Objects.equals(otherService.getScopeType(), this.getScopeType());
+    }
+
+    @Override
+    public String toString() {
+        if (this.componentType == null) {
+            return super.toString();
+        }
+
+        return this.componentType.getName();
+    }
+
 
     public static class ObjectInstantiation {
         private static final String INVALID_PARAMETERS_COUNT_MSG = "Invalid parameters count for '%s'.";
