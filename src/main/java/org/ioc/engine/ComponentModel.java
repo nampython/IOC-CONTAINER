@@ -1,5 +1,6 @@
 package org.ioc.engine;
 
+import org.ioc.engine.core.InstantiationComponentBean;
 import org.ioc.exception.ComponentInstantiationException;
 import org.ioc.exception.PostConstructException;
 
@@ -107,7 +108,7 @@ public class ComponentModel {
                 this.instanceRequested = true;
                 return this.instance;
             }
-            return ObjectInstantiation.createNewInstance(this);
+            return InstantiationComponentBean.HandlerInstantiation.createNewInstance(this);
         }
         if (this.proxyInstance != null) {
             return this.proxyInstance;

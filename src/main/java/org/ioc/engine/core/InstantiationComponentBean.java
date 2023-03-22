@@ -129,7 +129,7 @@ public class InstantiationComponentBean extends InstantiateContext {
             componentModel.setInstance(createNewInstance(componentModel));
         }
 
-        private static Object createNewInstance(ComponentModel componentModel) {
+        public static Object createNewInstance(ComponentModel componentModel) {
             final Object[] constructorParams = componentModel.getResolvedConstructorParams().stream().map(DependencyParam::getInstance).toArray(Object[]::new);
             final Object[] fieldParams = componentModel.getResolvedFields().stream().map(DependencyParam::getInstance).toArray(Object[]::new);
             return createNewInstance(componentModel, constructorParams, fieldParams);
@@ -207,7 +207,7 @@ public class InstantiationComponentBean extends InstantiateContext {
             bean.setInstance(createNewInstance(bean));
         }
 
-        private static Object createNewInstance(ComponentBeanModel bean) {
+        public static Object createNewInstance(ComponentBeanModel bean) {
             final Method originMethod = bean.getOriginMethod();
             final Object rootInstance = bean.getRootComponent().getInstance();
             try {
