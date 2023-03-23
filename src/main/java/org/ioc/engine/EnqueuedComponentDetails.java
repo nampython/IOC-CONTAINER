@@ -135,4 +135,23 @@ public class EnqueuedComponentDetails {
     public ComponentModel getComponentModel() {
         return componentModel;
     }
+
+    @Override
+    public String toString() {
+        return this.componentModel.getComponentType().getName();
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if (!(other instanceof EnqueuedComponentDetails)) {
+            return false;
+        }
+
+        return this.componentModel.equals(((EnqueuedComponentDetails) other).getComponentModel());
+    }
+
+    @Override
+    public int hashCode() {
+        return this.componentModel.hashCode();
+    }
 }
