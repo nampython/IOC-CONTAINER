@@ -3,7 +3,6 @@ package org.ioc.engine.core;
 import org.ioc.configuration.ScanningConfiguration;
 import org.ioc.engine.*;
 import org.ioc.exception.ClassLocationException;
-import org.ioc.support.HandlerAnnotation;
 import org.ioc.stereotype.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -87,13 +86,13 @@ public class LoaderComponent extends SettingComponent {
      * @return Classes with annotation
      */
     private Map<Class<?>, Annotation> filterComponentClasses(Set<Class<?>> scannedClasses) {
-        final Set<Class<? extends Annotation>> availabeComponent = this.scanningConfiguration.getComponentAnnotations();
+        final Set<Class<? extends Annotation>> availableComponent = this.scanningConfiguration.getComponentAnnotations();
         final Map<Class<?>, Annotation> classWithComponent = new HashMap<>();
         // Get all classes that contain @Component.
         for (Class<?> cls : scannedClasses) {
             if (!cls.isInterface() && !cls.isEnum() && !cls.isAnnotation()) {
                 for (Annotation annotation : cls.getAnnotations()) {
-                    if (availabeComponent.contains(annotation.annotationType())) {
+                    if (availableComponent.contains(annotation.annotationType())) {
                         classWithComponent.put(cls, annotation);
                         break;
                     }
@@ -137,6 +136,7 @@ public class LoaderComponent extends SettingComponent {
                 return declaredConstructor;
             }
         }
+        // In case can't find constructor with @Autowired, will return first constructor.
         return classComponent.getDeclaredConstructors()[0];
     }
 
@@ -383,6 +383,71 @@ public class LoaderComponent extends SettingComponent {
                     (ParameterizedType) actualTypeArgument,
                     (Class<?>) ((ParameterizedType) actualTypeArgument).getRawType()
             );
+        }
+    }
+    public static class HandlerAnnotation {
+
+        /**
+         * If the annotation is annotated with @AliasFor, and the value of the @AliasFor annotation is the same as the
+         * requiredAnnotation, then return the value of the @AliasFor annotation
+         *
+         * @param declaredAnnotation The annotation that is being checked for the alias.
+         * @param requiredAnnotation The annotation that you want to check for.
+         * @return The annotation type of the alias annotation.
+         */
+        public static Class<? extends Annotation> getAliasAnnotation(Annotation declaredAnnotation, Class<? extends Annotation> requiredAnnotation) {
+            if (declaredAnnotation.annotationType().isAnnotationPresent(AliasFor.class)) {
+                final Class<? extends Annotation> aliasValue = declaredAnnotation.annotationType().getAnnotation(AliasFor.class).value();
+                if (requiredAnnotation == aliasValue) {
+                    return aliasValue;
+                }
+            }
+            return null;
+        }
+
+        /**
+         * If the annotation is an alias, return the annotation it is an alias for, otherwise return null.
+         *
+         * @param annotations The array of annotations to search through.
+         * @param requiredAnnotation The annotation you want to check for.
+         * @return A boolean value.
+         */
+        public static boolean isAliasAnnotationPresent(Annotation[] annotations, Class<? extends Annotation> requiredAnnotation) {
+            for (Annotation declaredAnnotation : annotations) {
+                final Class<?> alias = getAliasAnnotation(declaredAnnotation, requiredAnnotation);
+                if (alias != null) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        /**
+         * > It returns the first annotation of the given type, or null if none is found
+         *
+         * @param annotations The array of annotations to search through.
+         * @param requiredAnnotation The annotation you want to find
+         * @return Annotation
+         */
+        public static Annotation getAnnotation(Annotation[] annotations, Class<? extends Annotation> requiredAnnotation) {
+            for (Annotation annotation : annotations) {
+                if (annotation.annotationType() == requiredAnnotation || getAliasAnnotation(annotation, requiredAnnotation) != null) {
+                    return annotation;
+                }
+            }
+            return null;
+        }
+
+        /**
+         * It returns true if the array of annotations contains an annotation of the specified type
+         *
+         * @param annotations The array of annotations to search through.
+         * @param requiredAnnotation The annotation you want to check for.
+         * @return The annotation that is being returned is the requiredAnnotation.
+         */
+        public static boolean isAnnotationPresent(Annotation[] annotations, Class<? extends Annotation> requiredAnnotation) {
+            return getAnnotation(annotations, requiredAnnotation) != null;
+
         }
     }
 }
