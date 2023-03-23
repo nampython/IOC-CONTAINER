@@ -1,6 +1,6 @@
 package org.ioc.engine;
 
-import org.ioc.support.HandlerAnnotation;
+import org.ioc.engine.core.LoaderComponent;
 import org.ioc.stereotype.Qualifier;
 
 import java.lang.annotation.Annotation;
@@ -57,7 +57,7 @@ public class EnqueuedComponentDetails {
      * @return - The name of the instance.
      */
     private String getInstanceName(Annotation[] annotations) {
-        final Annotation annotation = HandlerAnnotation.getAnnotation(annotations, Qualifier.class);
+        final Annotation annotation = LoaderComponent.HandlerAnnotation.getAnnotation(annotations, Qualifier.class);
         if (annotation != null) {
             try {
                 Method method = annotation.annotationType().getMethod("value");

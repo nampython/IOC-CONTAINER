@@ -5,7 +5,6 @@ import org.ioc.engine.*;
 import org.ioc.exception.CircularDependencyException;
 import org.ioc.exception.ComponentInstantiationException;
 import org.ioc.support.DependencyResolver;
-import org.ioc.support.HandlerAnnotation;
 import org.ioc.stereotype.Nullable;
 import org.ioc.stereotype.Qualifier;
 
@@ -96,7 +95,7 @@ public class DependencyResolveComponent {
         Class<?> dependencyType = dependencyParam.getDependencyType();
         String instanceName = dependencyParam.getInstanceName();
 
-        if (HandlerAnnotation.isAnnotationPresent(dependencyParam.getAnnotations(), Nullable.class)) {
+        if (LoaderComponent.HandlerAnnotation.isAnnotationPresent(dependencyParam.getAnnotations(), Nullable.class)) {
             dependencyParam.setRequired(false);
         }
         // In case of the parameter is not equals null. That means @Qualifier exists. Check the value of @Qualifier and

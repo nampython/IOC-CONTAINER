@@ -31,7 +31,7 @@ public class MethodInvocationHandler implements MethodHandler {
             ));
 
             for (MethodAspectHandlerDto serviceAspectHandler : aspectHandlers) {
-                final MethodAspectHandler<Annotation> aspectHandler = (MethodAspectHandler<Annotation>)
+                final ComponentMethodAspectHandler<Annotation> aspectHandler = (ComponentMethodAspectHandler<Annotation>)
                         serviceAspectHandler.getComponentModel().getInstance();
 
                 final MethodInvocationChain next = invocationChain.get();

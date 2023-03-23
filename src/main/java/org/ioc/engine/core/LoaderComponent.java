@@ -342,6 +342,9 @@ public class LoaderComponent extends SettingComponent {
         this.scanningConfiguration.getBeanAnnotations().add(Bean.class);
     }
 
+    /**
+     * It gets the generic type arguments of a given class
+     */
     public static class HandlerGeneric {
         /**
          * Gets the generic type arguments of a given class.
@@ -350,7 +353,7 @@ public class LoaderComponent extends SettingComponent {
          * If we call getGenericTypeArguments(Abc.class, Handler.class) we will get String as a result.
          *
          * @param cls          - class to be looked up.
-         * @param genericClass - generic class or interface from which we need to extract the types.
+         * @param genericClass - generic¡ class or interface from which we need to extract the types.
          * @return -
          */
         public static Type @Nullable [] getGenericTypeArguments(Class<?> cls, Class<?> genericClass) {
@@ -385,6 +388,8 @@ public class LoaderComponent extends SettingComponent {
             );
         }
     }
+
+
     public static class HandlerAnnotation {
 
         /**
@@ -447,7 +452,6 @@ public class LoaderComponent extends SettingComponent {
          */
         public static boolean isAnnotationPresent(Annotation[] annotations, Class<? extends Annotation> requiredAnnotation) {
             return getAnnotation(annotations, requiredAnnotation) != null;
-
         }
     }
 }
