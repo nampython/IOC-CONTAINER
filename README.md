@@ -1,6 +1,6 @@
 <h1 align="center">
   <a href="https://github.com/nampython/IoC-Container">
-    <img src="slug/HappyFace.svg" alt="Logo" width="125" height="125">
+    <img src="/container.svg" alt="Logo" width="125" height="125">
   </a>
 </h1>
 
