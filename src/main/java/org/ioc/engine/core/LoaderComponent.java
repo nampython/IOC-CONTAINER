@@ -86,13 +86,13 @@ public class LoaderComponent extends SettingComponent {
      * @return Classes with annotation
      */
     private Map<Class<?>, Annotation> filterComponentClasses(Set<Class<?>> scannedClasses) {
-        final Set<Class<? extends Annotation>> availableComponent = this.scanningConfiguration.getComponentAnnotations();
+        final Set<Class<? extends Annotation>> availableComponents = this.scanningConfiguration.getComponentAnnotations();
         final Map<Class<?>, Annotation> classWithComponent = new HashMap<>();
         // Get all classes that contain @Component.
         for (Class<?> cls : scannedClasses) {
             if (!cls.isInterface() && !cls.isEnum() && !cls.isAnnotation()) {
                 for (Annotation annotation : cls.getAnnotations()) {
-                    if (availableComponent.contains(annotation.annotationType())) {
+                    if (availableComponents.contains(annotation.annotationType())) {
                         classWithComponent.put(cls, annotation);
                         break;
                     }

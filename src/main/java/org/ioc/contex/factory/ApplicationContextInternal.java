@@ -111,7 +111,7 @@ public class ApplicationContextInternal implements EnvironmentSource, Applicatio
      * @return - Bean instance
      */
     @Override
-    public <T> T getBean(Class<?> cls) {
+    public <T> T getBean(Class<T> cls) {
         return this.getBean(cls, null);
     }
 
