@@ -81,7 +81,7 @@ It’s really hard and complicated to know how spring core works. Because it is 
         }
     }
     ```
-    - You can also run your app with `InitApplicationContext.run(YourStartUpClass.class, configs)` . With the Configuration class, you can customize many features.
+- You can also run your app with `InitApplicationContext.run(YourStartUpClass.class, configs)` . With the Configuration class, you can customize many features.
     
     ```java
     Configurion configs = new Configuration()
