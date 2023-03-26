@@ -79,7 +79,7 @@ public class DependencyResolveComponent {
                     componentModelsToResolve = this.resolveParameter(dependencyParam, allAvailableComponents);
                 } catch (Exception e) {
                     throw new ComponentInstantiationException(String.format(
-                            "Error while resolving dependencies for service '%s'.", componentModel.getComponentType()
+                            "Error while resolving dependencies for component '%s'.", componentModel.getComponentType()
                     ), e);
                 }
                 for (ComponentModel componentModelResolve : componentModelsToResolve) {

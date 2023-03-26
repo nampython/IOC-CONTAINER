@@ -89,7 +89,7 @@ public class InitApplicationContext {
             final Directory directory = directoryHandler.resolveDirectory(file);
             //TODO: Implement ClassLocatorForJarFile class.
             if (directory.getDirectoryType() == DirectoryType.JAR_FILE) {
-//                classLocator = new ClassLocatorForJarFile();
+                classLoaderContext = new ClassLoaderContextJar();
             }
             allActiveClass.addAll(classLoaderContext.loadClasses(directory.getDirectory()));
         }
