@@ -43,7 +43,6 @@ public class DependencyParam {
     public ComponentModel getComponentModel() {
         return componentModel;
     }
-    // ???
     public Object getInstance() {
         final Object instance;
         if (this.dependencyResolver != null) {
