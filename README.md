@@ -71,28 +71,29 @@ It’s really hard and complicated to know how spring core works. Because it is 
         </dependency>
       ```
         
-- In your main method call '`InitApplicationContext`.run(YourStartupClass.class) and annotate your startup class with @Component
+- In your main method call `InitApplicationContext.run(YourStartUpClass.class)` and annotate your startup class with `@ComponentEntryApplication`
     
     ```java
-    @Component
-    public class ApplicationEntryPoint {
-        public static void main(String[] args) {
-            InitApplicationContext.run(ApplicationEntryPoint.class, config);
-     }
+    @ComponentEntryApplication
+    public class App {
+        public static void main(String[] arg) {
+            InitApplicationContext.run(App.class);
+        }
+    }
     ```
-  
-- You can also run the app with 'InitApplicationContext.run(YourStartupClass.class, new Configuration()).
-
+    - You can also run your app with `InitApplicationContext.run(YourStartUpClass.class, configs)` . With the Configuration class, you can customize many features.
+    
     ```java
-    Configuration config = new Configuration()
-                    .instantiations()
-                    .addDependencyResolver(new StringConfigProducer())
-                    .addDependencyResolver(new StringConfigProducer2())
-                    .and()
-                    .scanning() // add custom Componetn and Bean
-                    .addComponentAnnotation(CustomServiceAnnotation.class)
-                    .addBeanAnnotation(CustomBeanAnnotation.class)
-                    .and();
+    Configurion configs = new Configuration()
+            .instantiations()
+            .addDependencyResolver(new StringConfigProducer())
+            .addDependencyResolver(new StringConfigProducerTwo())
+            .and()
+            .scanning()
+            .addComponentDetailsCreatedCallback(new CustomScopeEventHandler())
+            .addComponentAnnotation(CustomComponent.class)
+            .and();
+    InitApplicationContext.run(App.class, configs);
     ```
 
 **Below are the supported annotations in this library:** 
