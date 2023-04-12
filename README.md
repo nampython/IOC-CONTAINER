@@ -35,7 +35,7 @@ A library that replicates the functionality of the Spring Core framework. It sup
 
 It’s really hard and complicated to know how spring core works. Because it is composed of many modules and is produced by many people. I try to integrate many components into one and make it simple by following these steps:
 
-- Finding and loading all classes available in the project and pushing them into a set collection. Pay attention to getting classes because classes in directory is different compared to classes in the directory
+- Finding and loading all classes available in the project and pushing them into a set collection. Pay attention to getting classes because classes in directory is different compared to classes in the jar 
 - Scanning and filtering the classes that are identified are components.
 - Instantiate these components to become an instance.
 - Made an Application Context interface. As we know Spring has an interface applicationContext to retrieve all beans. I also made an applicationContext interface to retrieve it from getting, reloading, and updating beans.
